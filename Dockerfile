@@ -1,6 +1,20 @@
 FROM       ahirmayur/nginx-php7
 MAINTAINER Mayur Ahir "https://github.com/ahirmayur"
 
+# Default lang is REAL English ;)
+ENV LANG C.UTF-8
+RUN echo "LC_ALL=en_GB.UTF-8" >> /etc/default/locale
+RUN locale-gen en_GB.UTF-8
+
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
+# Surpress Upstart errors/warning
+RUN dpkg-divert --local --rename --add /sbin/initctl
+RUN ln -sf /bin/true /sbin/initctl
+
+# Let the conatiner know that there is no tty
+ENV DEBIAN_FRONTEND noninteractive
+
 ENV PMA_SECRET          blowfish_secret
 ENV PMA_USERNAME        pma
 ENV PMA_PASSWORD        password
